@@ -84,8 +84,9 @@ type CoreSecurityScheme struct {
 }
 
 type GoogleSecurityScheme struct {
-	XGoogleIssuer  string `json:"x-google-issuer,omitempty"`
-	XGoogleJwksUri string `json:"x-google-jwks_uri"`
+	XGoogleIssuer    string `json:"x-google-issuer,omitempty"`
+	XGoogleJwksUri   string `json:"x-google-jwks_uri,omitempty"`
+	XGoogleAudiences string `json:"x-google-audiences,omitempty"`
 }
 
 // SecurityScheme represents a composition of the standard scheme elements plus any
@@ -98,13 +99,13 @@ type SecurityScheme struct {
 // SecuritySchemeOption provides additional customizations to the SecurityScheme.
 type SecuritySchemeOption func(securityScheme *SecurityScheme)
 
-func GoogleSecurity(googleIssuer, googleJwksUri string) SecuritySchemeOption {
+func GoogleSecurityExtensions(issuer, jwksUri, audiences string) SecuritySchemeOption {
 	return func(securityScheme *SecurityScheme) {
-		securityScheme.XGoogleIssuer = googleIssuer
-		securityScheme.XGoogleJwksUri = googleJwksUri
+		securityScheme.XGoogleIssuer = issuer
+		securityScheme.XGoogleJwksUri = jwksUri
+		securityScheme.XGoogleAudiences = audiences
 	}
 }
-
 
 // SecuritySchemeDescription sets the security scheme's description.
 func SecuritySchemeDescription(description string) SecuritySchemeOption {
