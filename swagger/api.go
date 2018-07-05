@@ -72,7 +72,7 @@ type Info struct {
 }
 
 // SecurityScheme represents a security scheme from the swagger definition.
-type SecurityScheme struct {
+type CoreSecurityScheme struct {
 	Type             string            `json:"type"`
 	Description      string            `json:"description,omitempty"`
 	Name             string            `json:"name,omitempty"`
@@ -83,8 +83,28 @@ type SecurityScheme struct {
 	Scopes           map[string]string `json:"scopes,omitempty"`
 }
 
+type GoogleSecurityScheme struct {
+	XGoogleIssuer  string `json:"x-google-issuer,omitempty"`
+	XGoogleJwksUri string `json:"x-google-jwks_uri"`
+}
+
+// SecurityScheme represents a composition of the standard scheme elements plus any
+// extension scheme elements
+type SecurityScheme struct {
+	CoreSecurityScheme
+	GoogleSecurityScheme
+}
+
 // SecuritySchemeOption provides additional customizations to the SecurityScheme.
 type SecuritySchemeOption func(securityScheme *SecurityScheme)
+
+func GoogleSecurity(googleIssuer, googleJwksUri string) SecuritySchemeOption {
+	return func(securityScheme *SecurityScheme) {
+		securityScheme.XGoogleIssuer = googleIssuer
+		securityScheme.XGoogleJwksUri = googleJwksUri
+	}
+}
+
 
 // SecuritySchemeDescription sets the security scheme's description.
 func SecuritySchemeDescription(description string) SecuritySchemeOption {
